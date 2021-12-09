@@ -7,7 +7,7 @@ from create_bot import bot, dp
 
 
 async def other(message: types.Message):
-    await bot.send_message(chat_id=message.chat.id, text="Нет такой команды\nИли сообщение введино не верно")
+    await bot.send_message(chat_id=message.chat.id, text="Нет такой команды или сообщение введино не верно")
     await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
 
 
