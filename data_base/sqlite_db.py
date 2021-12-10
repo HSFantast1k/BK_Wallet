@@ -16,7 +16,8 @@ def sql_start():
     base.execute("""CREATE TABLE IF NOT EXISTS oper(
     Tg_ID TEXT,
     Date TEXT,
-    Operations INT);
+    Operations INT,
+    Category TEXT);
     """)
     base.commit()
 
@@ -27,8 +28,8 @@ def sql_start():
 
 
 async def sql_write(data_update):
-    print(f"data update {data_update}")
-    cur.execute("INSERT INTO oper VALUES (?,?,?)", data_update)
+    # print(f"data update {data_update}")
+    cur.execute("INSERT INTO oper VALUES (?,?,?,?)", data_update)
     base.commit()
 
 
@@ -46,9 +47,9 @@ async def sql_read(message, request_type="output everything"):
         if int(str(cell[0]).split(' ')[0]) == message.from_user.id:
             if request_type == "output everything":
                 await bot.send_message(chat_id=message.from_user.id,
-                                       text=f'<b>Дата операции:</b> {cell[1]}\n<b>Сума:</b> {cell[2]} UAH',
+                                       text=f'<b>Дата операции:</b> {cell[1]}\n<b>Сума:</b> {cell[2]} UAH\n<b>Категория:</b> {cell[3]}',
                                        parse_mode=types.ParseMode.HTML)
             total_spent += round(cell[2], 2)
     await bot.send_message(chat_id=message.from_user.id, text=f"<b>Баланс Wallet:</b> {round(total_spent, 2)} UAH",
                            parse_mode=types.ParseMode.HTML)
-    await bot.send_message(chat_id=message.from_user.id, text='-' * 10)
+    await bot.send_message(chat_id=message.from_user.id, text='―' * 10)
