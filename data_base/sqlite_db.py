@@ -46,9 +46,9 @@ async def sql_read(message, request_type="output everything"):
         if int(str(cell[0]).split(' ')[0]) == message.from_user.id:
             if request_type == "output everything":
                 await bot.send_message(chat_id=message.from_user.id,
-                                       text=f'<b>Дата операции:</b> {cell[1]}\n<b>Сума:</b> {cell[2]}',
+                                       text=f'<b>Дата операции:</b> {cell[1]}\n<b>Сума:</b> {cell[2]} UAH',
                                        parse_mode=types.ParseMode.HTML)
-            total_spent += cell[2]
-    await bot.send_message(chat_id=message.from_user.id, text=f"<b>Баланс Wallet:</b> {total_spent} $",
+            total_spent += round(cell[2], 2)
+    await bot.send_message(chat_id=message.from_user.id, text=f"<b>Баланс Wallet:</b> {round(total_spent, 2)} UAH",
                            parse_mode=types.ParseMode.HTML)
     await bot.send_message(chat_id=message.from_user.id, text='-' * 10)
