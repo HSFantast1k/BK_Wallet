@@ -2,6 +2,7 @@ import sqlite3 as sq
 import time
 from create_bot import bot
 from aiogram import types
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from datetime import datetime
 
 """
@@ -17,7 +18,7 @@ def sql_start():
         print('Data base connected OK!')
     base.execute("""CREATE TABLE IF NOT EXISTS oper(
     Tg_ID TEXT,
-    Date INT,
+    Date INT PRIMARY KEY,
     Operations INT,
     Category TEXT);
     """)
@@ -52,7 +53,10 @@ async def sql_read(message, user_id, request_type="output everything"):
                 if request_type == "output everything":
                     await bot.send_message(chat_id=message.chat.id,
                                            text=f'<b>Дата операции:</b> {datetime.fromtimestamp(cell[1])}\n<b>Сума:</b> {cell[2]} UAH\n<b>Категория:</b> {cell[3]}',
-                                           parse_mode=types.ParseMode.HTML)
+                                           parse_mode=types.ParseMode.HTML,
+                                           reply_markup=InlineKeyboardMarkup().add(
+                                               InlineKeyboardButton(f'Удалить ❌',
+                                                                    callback_data=f'del')))
                 total_spent += round(cell[2], 2)
             elif 'days' in request_type and (
                     int(time.time()) - cell[1]) <= int(request_type.split(' ')[1]) * 24 * 60 * 60:

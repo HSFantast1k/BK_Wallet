@@ -105,7 +105,7 @@ async def balance_wallet(message: types.Message):
 
 
 """
-@dp.register_message_handler(lambda message: message.text.startswith('Посмотреть все транзакции 🔁'))
+@dp.register_message_handler(lambda message: message.text.startswith('Все транзакции 🔁'))
 Обработчик: Просмотр всех расходов
 """
 
@@ -115,7 +115,17 @@ async def view_all_expenses(message: types.Message):
 
 
 """
-@dp.register_message_handler(lambda message: message.text.startswith('Посмотреть частично'))
+Обработчик: Удаляние выбраного расхода
+"""
+
+
+@dp.callback_query_handler(text='del')
+async def delete_expenses(callback: types.CallbackQuery):
+    await callback.answer(text='Cooming soon')
+
+
+"""
+@dp.register_message_handler(lambda message: message.text.startswith('Частичные транзакции 🔎'))
 Обработчик: Частично просмотр расходов
 """
 
@@ -181,7 +191,7 @@ async def about_creators(message: types.Message):
     <b>Будущее обновление ⚙:</b>
     
 <i><b>В разработке и тестировании:</b>
-Add option ❎: Добавлять регулярные платежи</i>
+Add option ❎: Удалять пользователем счёта</i>
 
 <i><b>Обновление которые вступили в силу:</b>
 Debugging  ✅: Проблама чисел с плавающей тойчкой
@@ -193,7 +203,7 @@ Upd project ✅: Обновление безопасности
 Add option  ✅: Сделать меню ещё удобней</i>
 
 <i><b>Cooming soon:</b>
-Add option ❌: Удалять/изменять пользователем счёта
+Add option ❌: Добавлять регулярные платежи 
 Add option ❌: Полного стирание данных о пользователе
 Add option ❌: Добавить достижение/ачивки
 Add option ❌: Добавить аналитику росходов 
