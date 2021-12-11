@@ -19,6 +19,7 @@ async def command_start(message: types.Message):
 <i>Только прочитай соглашение 📜</i>""", reply_markup=InlineKeyboardMarkup().add(
             InlineKeyboardButton('Прочитать соглашение 🧐', callback_data=f'read_license')),
                            parse_mode=types.ParseMode.HTML)
+    print(f'USER TO CONNECT (User_ID - {message.from_user.id}, User_Name - {message.from_user.full_name})')
 
 
 """
