@@ -1,11 +1,9 @@
 from aiogram import types, Dispatcher
 from create_bot import dp, bot
-from datetime import datetime
 from keyboards import client_kb
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from data_base import sqlite_db
 import time
-from datetime import datetime
 
 """
 @dp.message_handler(commands=['start'])
@@ -182,17 +180,18 @@ async def about_creators(message: types.Message):
     <b>Будущее обновление ⚙:</b>
     
 <i><b>В разработке и тестировании:</b>
-Add option ❎: Сделать меню ещё удобней</i>
+Add option ❎: Добавлять регулярные платежи</i>
 
 <i><b>Обновление которые вступили в силу:</b>
 Debugging  ✅: Проблама чисел с плавающей тойчкой
-Add option ✅: Добавлять категории для покупок
-Add option ✅: Перевод в Unix формат времени
-Add option ✅: Просмотра расходов за последнии 3, 7, 30 дней</i>
+Add option  ✅: Добавлять категории для покупок
+Add option  ✅: Перевод в Unix формат времени
+Add option  ✅: Просмотра расходов за последнии 3, 7, 30 дней
+Upd project ✅: Оптимизирован код
+Upd project ✅: Обновление безопасности
+Add option  ✅: Сделать меню ещё удобней</i>
 
-<b><i>Cooming soon:</i></b>
-<i>Add option ❌: Сделать меню ещё удобней
-Add option ❌: Добавлять регулярные платежи
+<i><b>Cooming soon:</b>
 Add option ❌: Удалять/изменять пользователем счёта
 Add option ❌: Полного стирание данных о пользователе
 Add option ❌: Добавить достижение/ачивки
@@ -217,10 +216,10 @@ def registe_handlers_client(dp: Dispatcher):
         message: message.text in 'Продукты 🥦 Транспорт 🚀 Дом 🏠 Развлечения 🎡 Online Profit 🤑 Бьюти 💄 Другие ➡️')
     dp.register_message_handler(balance_wallet, lambda message: message.text.startswith('Баланс Wallet 👛'))
     dp.register_message_handler(view_all_expenses,
-                                lambda message: message.text.startswith('Посмотреть все транзакции 🔁'))
+                                lambda message: message.text.startswith('Все транзакции 🔁'))
     dp.register_message_handler(view_partially_expenses,
-                                lambda message: message.text.startswith('Посмотреть частично 🔎'))
+                                lambda message: message.text.startswith('Частичные транзакции 🔎'))
     dp.register_message_handler(available_commands,
-                                lambda message: message.text.startswith('Посмотреть доступные команды 👋'))
+                                lambda message: message.text.startswith('Доступные команды 👋'))
     dp.register_message_handler(about_creators,
-                                lambda message: message.text.startswith('О создателе и будущих обновлений 👨‍💻'))
+                                lambda message: message.text.startswith('О боте 🤖'))
