@@ -37,7 +37,7 @@ async def sql_write(data_update):
 
 
 """
-Полное чтение из БД
+Полное\Частичное чтение из БД
 
 Функция sql_read принимаеть второй аргумен request_type - тип операции (по умолчанию он равен output everything - вывод всё),
 можна изменить на output only balance - вывод только баланса, output 3 days - вывод посденних 3 дней
@@ -56,7 +56,7 @@ async def sql_read(message, user_id, request_type="output everything"):
                                            parse_mode=types.ParseMode.HTML,
                                            reply_markup=InlineKeyboardMarkup().add(
                                                InlineKeyboardButton(f'Удалить ❌',
-                                                                    callback_data=f'del')))
+                                                                    callback_data=f'del {cell[1]}')))
                 total_spent += round(cell[2], 2)
             elif 'days' in request_type and (
                     int(time.time()) - cell[1]) <= int(request_type.split(' ')[1]) * 24 * 60 * 60:
@@ -64,6 +64,16 @@ async def sql_read(message, user_id, request_type="output everything"):
                                        text=f'<b>Дата операции:</b> {datetime.fromtimestamp(cell[1])}\n<b>Сума:</b> {cell[2]} UAH\n<b>Категория:</b> {cell[3]}',
                                        parse_mode=types.ParseMode.HTML)
                 total_spent += round(cell[2], 2)
-    await bot.send_message(chat_id=message.chat.id, text=f"<b>Баланс Wallet:</b> {round(total_spent, 2)} UAH",
+    await bot.send_message(chat_id=message.chat.id, text=f"<b>Последний баланс Wallet:</b> {round(total_spent, 2)} UAH",
                            parse_mode=types.ParseMode.HTML)
     await bot.send_message(chat_id=message.chat.id, text='―' * 10)
+
+
+"""
+Выборочное удаление операций из БД, через Inline btn
+"""
+
+
+async def sql_delete_cell(date):
+    cur.execute('DELETE FROM oper WHERE Date == ?', (date,))
+    base.commit()

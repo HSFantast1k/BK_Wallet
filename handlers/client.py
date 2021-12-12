@@ -1,5 +1,5 @@
 from aiogram import types, Dispatcher
-from create_bot import dp, bot
+from create_bot import dp, bot, ADMIN_ID, USERS_CHAT_ID
 from keyboards import client_kb
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from data_base import sqlite_db
@@ -19,8 +19,9 @@ async def command_start(message: types.Message):
 <i>Только прочитай соглашение 📜</i>""", reply_markup=InlineKeyboardMarkup().add(
             InlineKeyboardButton('Прочитать соглашение 🧐', callback_data=f'read_license')),
                            parse_mode=types.ParseMode.HTML)
-    print(f'USER TO CONNECT (User_ID - {message.from_user.id}, User_Name - {message.from_user.full_name})')
-
+    if message.from_user.id not in USERS_CHAT_ID and message.from_user.id not in ADMIN_ID:
+        USERS_CHAT_ID[message.chat.id] = message.chat.full_name
+        print(f'USER TO CONNECT (User_ID - {message.from_user.id}, User_Name - {message.from_user.full_name})')
 
 """
 @dp.callback_query_handler(text='read_license')
@@ -119,9 +120,10 @@ async def view_all_expenses(message: types.Message):
 """
 
 
-@dp.callback_query_handler(text='del')
 async def delete_expenses(callback: types.CallbackQuery):
-    await callback.answer(text='Cooming soon')
+    await sqlite_db.sql_delete_cell(callback.data.split(' ')[1])
+    await callback.answer('Транзакция успешно удалена')
+    await bot.delete_message(chat_id=callback.message.chat.id, message_id=callback.message.message_id)
 
 
 """
@@ -191,7 +193,7 @@ async def about_creators(message: types.Message):
     <b>Будущее обновление ⚙:</b>
     
 <i><b>В разработке и тестировании:</b>
-Add option ❎: Удалять пользователем счёта</i>
+Add option ❎: Добавить достижение/ачивки</i>
 
 <i><b>Обновление которые вступили в силу:</b>
 Debugging  ✅: Проблама чисел с плавающей тойчкой
@@ -200,13 +202,15 @@ Add option  ✅: Перевод в Unix формат времени
 Add option  ✅: Просмотра расходов за последнии 3, 7, 30 дней
 Upd project ✅: Оптимизирован код
 Upd project ✅: Обновление безопасности
-Add option  ✅: Сделать меню ещё удобней</i>
+Add option  ✅: Сделать меню ещё удобней и функциональным
+Upd project ✅: Удалять пользователем счёта
+Add option  ✅: Добавления функций для админа</i>
 
 <i><b>Cooming soon:</b>
-Add option ❌: Добавлять регулярные платежи 
-Add option ❌: Полного стирание данных о пользователе
 Add option ❌: Добавить достижение/ачивки
 Add option ❌: Добавить аналитику росходов 
+Add option ❌: Добавлять регулярные платежи 
+Add option ❌: Полного стирание данных о пользователе
 Add option ❌: Очищать историю чата
 <b>And others ...</b></i>
 
@@ -228,6 +232,7 @@ def registe_handlers_client(dp: Dispatcher):
     dp.register_message_handler(balance_wallet, lambda message: message.text.startswith('Баланс Wallet 👛'))
     dp.register_message_handler(view_all_expenses,
                                 lambda message: message.text.startswith('Все транзакции 🔁'))
+    dp.register_callback_query_handler(delete_expenses, lambda call: call.data.startswith('del '))
     dp.register_message_handler(view_partially_expenses,
                                 lambda message: message.text.startswith('Частичные транзакции 🔎'))
     dp.register_message_handler(available_commands,
